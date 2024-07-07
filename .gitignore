@@ -1,2 +1,5 @@
 **/obj
 **/bin
+
+api/pgadmin
+api/postgres-data

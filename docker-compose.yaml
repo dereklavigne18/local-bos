@@ -1,0 +1,35 @@
+services:
+  api-postgres:
+    container_name: local_bos_postgres
+    image: "postgres:16"
+    environment:
+      POSTGRES_USER: "localbos"
+      POSTGRES_PASSWORD: "localbos!"
+      PGDATA: "/data/postgres"
+    volumes:
+      - ./api/postgres-data:/data/postgres
+      - ./api/init-postgres.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+    ports:
+      - "15432:5432"
+    restart: unless-stopped
+
+  admin-site-api-postgres:
+    container_name: admin-site-api-postgres
+    image: "dpage/pgadmin4:latest"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@localbos.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin!"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    volumes:
+      - ./api/pgadmin:/var/lib/pgadmin
+      - ./api/pgadmin_servers.json:/pgadmin4/servers.json
+    ports:
+      - "15433:80"
+    entrypoint:
+      - "/bin/sh"
+      - "-c"
+      - "/bin/echo 'postgres:5432:*:postgres:password' > /tmp/pgpassfile && chmod 600 /tmp/pgpassfile && /entrypoint.sh"
+    depends_on:
+      - api-postgres
+    restart: unless-stopped
