@@ -32,7 +32,7 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapControllerRoute(name: "default", pattern: "{controller=HelloWorld}/{action=Index}");
+app.MapControllerRoute(name: "default", pattern: "{controller}/{action}");
 app.MapGet("/weatherforecast", () =>
 {
     var forecast =  Enumerable.Range(1, 5).Select(index =>
