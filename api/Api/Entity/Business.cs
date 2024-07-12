@@ -1,7 +1,7 @@
 namespace Api.Entity;
 
-public class Business(int id, string name)
+public class Business(Guid id, string name)
 {
-    public int Id { get; private set; } = id;
+    public Guid Id { get; private set; } = id;
     public string Name { get; private set; } = name;
 }

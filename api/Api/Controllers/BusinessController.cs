@@ -15,7 +15,7 @@ public class BusinessController(ApiDbContext dbContext) : Controller
     [Route("business/{id}")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType<Business>(StatusCodes.Status200OK)]
-    public IActionResult Write([FromRoute] int id, [FromBody] WriteBusinessRequest request)
+    public IActionResult Write([FromRoute] Guid id, [FromBody] WriteBusinessRequest request)
     {
         var business = new Business(id, request.Name);
 
