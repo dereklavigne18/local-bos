@@ -11,6 +11,14 @@ public class BusinessController(ApiDbContext dbContext) : Controller
 {
     private ApiDbContext DbContext = dbContext;
 
+    [HttpGet]
+    [Route("business")]
+    [ProducesResponseType<IEnumerable<Business>>(StatusCodes.Status200OK)]
+    public ActionResult<IEnumerable<Business>> Get()
+    {
+        return Ok(DbContext.Businesses);
+    }
+
     [HttpPost]
     [Route("business")]
     [Consumes(MediaTypeNames.Application.Json)]
