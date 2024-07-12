@@ -12,12 +12,12 @@ public class BusinessController(ApiDbContext dbContext) : Controller
     private ApiDbContext DbContext = dbContext;
 
     [HttpPost]
-    [Route("business/{id}")]
+    [Route("business")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType<Business>(StatusCodes.Status200OK)]
-    public IActionResult Write([FromRoute] Guid id, [FromBody] WriteBusinessRequest request)
+    public ActionResult<Business> Post([FromBody] CreateBusinessRequest request)
     {
-        var business = new Business(id, request.Name);
+        var business = new Business(Guid.NewGuid(), request.Name);
 
         DbContext.Businesses.Add(business);
         DbContext.SaveChanges();
