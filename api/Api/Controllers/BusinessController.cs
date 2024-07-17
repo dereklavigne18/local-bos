@@ -23,7 +23,7 @@ public class BusinessController(ApiDbContext dbContext) : Controller
     [Route("business")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType<Business>(StatusCodes.Status200OK)]
-    public ActionResult<Business> Post([FromBody] CreateBusinessRequest request)
+    public ActionResult<Business> Post([FromBody] WriteBusinessRequest request)
     {
         var business = new Business(Guid.NewGuid(), request.Name);
 

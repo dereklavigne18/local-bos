@@ -31,7 +31,7 @@ public class BusinessControllerTests
     public  void Post_CreatesAndReturnsNewBusiness()
     {
         var testName = "Dan Flash's";
-        var request = new CreateBusinessRequest(testName);
+        var request = new WriteBusinessRequest(testName);
 
         var response = Subject.Post(request);
 
