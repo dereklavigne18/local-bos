@@ -5,7 +5,6 @@ using Api.Entity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using Shouldly;
 
 namespace Api.Tests.Controllers;
@@ -13,22 +12,44 @@ namespace Api.Tests.Controllers;
 public class BusinessControllerTests
 {
 
-    private Mock<DbSet<Business>> BusinessSet;
-    private readonly Mock<ApiDbContext> ApiDbContext;
+    private readonly ApiDbContext ApiDbContext;
     private readonly BusinessController Subject;
 
     public BusinessControllerTests()
     {
-        BusinessSet = new Mock<DbSet<Business>>();
-        ApiDbContext = new Mock<ApiDbContext>();
-        ApiDbContext.Setup(c => c.Businesses).Returns(BusinessSet.Object);
+        var optionBuilder = new DbContextOptionsBuilder<ApiDbContext>()
+            .UseInMemoryDatabase(databaseName: "local-bos");
+        ApiDbContext = new ApiDbContext(optionBuilder.Options);
+        ApiDbContext.Businesses.RemoveRange(ApiDbContext.Businesses);
 
-        Subject = new BusinessController(ApiDbContext.Object);
+        Subject = new BusinessController(ApiDbContext);
+    }
+
+    [Fact]
+    public void Get_ReturnsAllBusinesses()
+    {
+        var danFlashs = new Business(Guid.NewGuid(), "Dan Flash's");
+        var truffonis = new Business(Guid.NewGuid(), "Truffonis");
+        ApiDbContext.Businesses.Add(danFlashs);
+        ApiDbContext.Businesses.Add(truffonis);
+        ApiDbContext.SaveChanges();
+
+        var response = Subject.Get();
+
+        // Validate Response
+        var result = (ObjectResult?) response.Result;
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldNotBeNull();
+        int statusCode = (int)result.StatusCode;
+        statusCode.ShouldBe(StatusCodes.Status200OK);
+        result.Value.ShouldNotBeNull();
+        result.Value.ShouldBeAssignableTo<IEnumerable<Business>>();
+        IEnumerable<Business> resultBusinesses = (IEnumerable<Business>)result.Value;
+        resultBusinesses.ToList().ShouldBe(new List<Business> { danFlashs, truffonis });
     }
     
-    
     [Fact]
-    public  void Post_CreatesAndReturnsNewBusiness()
+    public void Post_CreatesAndReturnsNewBusiness()
     {
         var testName = "Dan Flash's";
         var request = new WriteBusinessRequest(testName);
@@ -46,7 +67,7 @@ public class BusinessControllerTests
         resultBusiness.Name.ShouldBe(testName);
 
         // Validate Calls
-        BusinessSet.Verify(x => x.Add(It.Is<Business>(b => b.Name == testName)), Times.Once());
-        ApiDbContext.Verify(x => x.SaveChanges());
+        var savedBusiness = ApiDbContext.Businesses.Where(b => b.Name == testName).FirstOrDefault();
+        savedBusiness.ShouldNotBeNull();
     }
 }
