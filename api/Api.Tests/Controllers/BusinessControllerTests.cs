@@ -70,4 +70,34 @@ public class BusinessControllerTests
         var savedBusiness = ApiDbContext.Businesses.Where(b => b.Name == testName).FirstOrDefault();
         savedBusiness.ShouldNotBeNull();
     }
+
+    [Fact]
+    public void Put_UpdatesAndReturnsBusiness()
+    {
+        var danFlashsId = Guid.NewGuid();
+        var danFlashs = new Business(danFlashsId, "Dan Flash's");
+        ApiDbContext.Businesses.Add(danFlashs);
+        ApiDbContext.SaveChanges();
+
+        var truffonisName = "Truffonis";
+        var request = new WriteBusinessRequest(truffonisName);
+        var response = Subject.Put(danFlashsId, request);
+
+        // Validate Response
+        var result = (ObjectResult?) response.Result;
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldNotBeNull();
+        int statusCode = (int)result.StatusCode;
+        statusCode.ShouldBe(StatusCodes.Status200OK);
+        result.Value.ShouldBeOfType(typeof(Business));
+        Business resultBusiness = (Business)result.Value;
+        resultBusiness.Id.ShouldBe(danFlashsId);
+        resultBusiness.Name.ShouldBe(truffonisName);
+
+        // Validate Calls
+        var savedBusiness = ApiDbContext.Businesses.Where(b =>
+            b.Id == danFlashsId && b.Name == truffonisName)
+            .FirstOrDefault();
+        savedBusiness.ShouldNotBeNull();
+    }
 }

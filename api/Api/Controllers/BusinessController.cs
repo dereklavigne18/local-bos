@@ -32,4 +32,23 @@ public class BusinessController(ApiDbContext dbContext) : Controller
 
         return Ok(business);
     }
+
+    [HttpPut]
+    [Route("business/{id}")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [ProducesResponseType<Business>(StatusCodes.Status200OK)]
+    public ActionResult<Business> Put([FromRoute] Guid id, [FromBody] WriteBusinessRequest request)
+    {
+        var business = DbContext.Businesses.Where(b => b.Id == id).FirstOrDefault();
+        if (business is null)
+        {
+            // Do something about this
+            return NotFound();
+        }
+        
+        business.Name = request.Name;
+        DbContext.SaveChanges();
+
+        return Ok(business);
+    }
 }
