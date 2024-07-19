@@ -3,8 +3,6 @@ using Api.Controllers.Request;
 using Api.Data;
 using Api.Entity;
 using Api.Tests.Asserters;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 
