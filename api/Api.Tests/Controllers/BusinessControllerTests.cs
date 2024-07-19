@@ -2,6 +2,7 @@ using Api.Controllers;
 using Api.Controllers.Request;
 using Api.Data;
 using Api.Entity;
+using Api.Tests.Asserters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,27 +26,28 @@ public class BusinessControllerTests
         Subject = new BusinessController(ApiDbContext);
     }
 
+    private void StageBusinesses(IEnumerable<Business> businesses)
+    {
+        foreach (var business in businesses)
+        {
+            ApiDbContext.Businesses.Add(business);
+        }
+
+        ApiDbContext.SaveChanges();
+    }
+
     [Fact]
     public void Get_ReturnsAllBusinesses()
     {
         var danFlashs = new Business(Guid.NewGuid(), "Dan Flash's");
         var truffonis = new Business(Guid.NewGuid(), "Truffonis");
-        ApiDbContext.Businesses.Add(danFlashs);
-        ApiDbContext.Businesses.Add(truffonis);
-        ApiDbContext.SaveChanges();
+        StageBusinesses([danFlashs, truffonis]);
 
         var response = Subject.Get();
 
         // Validate Response
-        var result = (ObjectResult?) response.Result;
-        result.ShouldNotBeNull();
-        result.StatusCode.ShouldNotBeNull();
-        int statusCode = (int)result.StatusCode;
-        statusCode.ShouldBe(StatusCodes.Status200OK);
-        result.Value.ShouldNotBeNull();
-        result.Value.ShouldBeAssignableTo<IEnumerable<Business>>();
-        IEnumerable<Business> resultBusinesses = (IEnumerable<Business>)result.Value;
-        resultBusinesses.ToList().ShouldBe(new List<Business> { danFlashs, truffonis });
+        ActionResultAsserter.AssertIsOk(response,
+            (businesses) => businesses.ToList().ShouldBe(new List<Business> { danFlashs, truffonis }));
     }
     
     [Fact]
@@ -57,14 +59,8 @@ public class BusinessControllerTests
         var response = Subject.Post(request);
 
         // Validate Response
-        var result = (ObjectResult?) response.Result;
-        result.ShouldNotBeNull();
-        result.StatusCode.ShouldNotBeNull();
-        int statusCode = (int)result.StatusCode;
-        statusCode.ShouldBe(StatusCodes.Status200OK);
-        result.Value.ShouldBeOfType(typeof(Business));
-        Business resultBusiness = (Business)result.Value;
-        resultBusiness.Name.ShouldBe(testName);
+        ActionResultAsserter.AssertIsOk(
+            response, (b) => b.Name.ShouldBe(testName));
 
         // Validate Calls
         var savedBusiness = ApiDbContext.Businesses.Where(b => b.Name == testName).FirstOrDefault();
@@ -76,23 +72,18 @@ public class BusinessControllerTests
     {
         var danFlashsId = Guid.NewGuid();
         var danFlashs = new Business(danFlashsId, "Dan Flash's");
-        ApiDbContext.Businesses.Add(danFlashs);
-        ApiDbContext.SaveChanges();
+        StageBusinesses([danFlashs]);
 
         var truffonisName = "Truffonis";
         var request = new WriteBusinessRequest(truffonisName);
         var response = Subject.Put(danFlashsId, request);
 
         // Validate Response
-        var result = (ObjectResult?) response.Result;
-        result.ShouldNotBeNull();
-        result.StatusCode.ShouldNotBeNull();
-        int statusCode = (int)result.StatusCode;
-        statusCode.ShouldBe(StatusCodes.Status200OK);
-        result.Value.ShouldBeOfType(typeof(Business));
-        Business resultBusiness = (Business)result.Value;
-        resultBusiness.Id.ShouldBe(danFlashsId);
-        resultBusiness.Name.ShouldBe(truffonisName);
+        ActionResultAsserter.AssertIsOk(response,
+            (b) => {
+                b.Id.ShouldBe(danFlashsId);
+                b.Name.ShouldBe(truffonisName);
+            });
 
         // Validate Calls
         var savedBusiness = ApiDbContext.Businesses.Where(b =>
@@ -107,21 +98,16 @@ public class BusinessControllerTests
         var id = Guid.NewGuid();
         var name = "Dan Flash's";
         var danFlashs = new Business(id, name);
-        ApiDbContext.Businesses.Add(danFlashs);
-        ApiDbContext.SaveChanges();
+        StageBusinesses([danFlashs]);
 
         var response = Subject.Delete(id);
 
         // Validate Response
-        var result = (ObjectResult?) response.Result;
-        result.ShouldNotBeNull();
-        result.StatusCode.ShouldNotBeNull();
-        int statusCode = (int)result.StatusCode;
-        statusCode.ShouldBe(StatusCodes.Status200OK);
-        result.Value.ShouldBeOfType(typeof(Business));
-        Business resultBusiness = (Business)result.Value;
-        resultBusiness.Id.ShouldBe(id);
-        resultBusiness.Name.ShouldBe(name);
+        ActionResultAsserter.AssertIsOk(response,
+            (b) => {
+                b.Id.ShouldBe(id);
+                b.Name.ShouldBe(name);
+            });
 
         // Validate Calls
         var savedBusiness = ApiDbContext.Businesses.Where(b =>
