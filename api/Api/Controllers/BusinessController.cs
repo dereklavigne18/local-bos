@@ -51,4 +51,22 @@ public class BusinessController(ApiDbContext dbContext) : Controller
 
         return Ok(business);
     }
+
+    [HttpDelete]
+    [Route("business/{id}")]
+    [ProducesResponseType<Business>(StatusCodes.Status200OK)]
+    public ActionResult<Business> Delete([FromRoute] Guid id)
+    {
+        var business = DbContext.Businesses.Where(b => b.Id == id).FirstOrDefault();
+        if (business is null)
+        {
+            // Do something about this
+            return NotFound();
+        }
+        
+        DbContext.Businesses.Remove(business);
+        DbContext.SaveChanges();
+
+        return Ok(business);
+    }
 }

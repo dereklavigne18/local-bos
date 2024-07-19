@@ -100,4 +100,33 @@ public class BusinessControllerTests
             .FirstOrDefault();
         savedBusiness.ShouldNotBeNull();
     }
+
+    [Fact]
+    public void Delete_RemovesAndReturnsBusiness()
+    {
+        var id = Guid.NewGuid();
+        var name = "Dan Flash's";
+        var danFlashs = new Business(id, name);
+        ApiDbContext.Businesses.Add(danFlashs);
+        ApiDbContext.SaveChanges();
+
+        var response = Subject.Delete(id);
+
+        // Validate Response
+        var result = (ObjectResult?) response.Result;
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldNotBeNull();
+        int statusCode = (int)result.StatusCode;
+        statusCode.ShouldBe(StatusCodes.Status200OK);
+        result.Value.ShouldBeOfType(typeof(Business));
+        Business resultBusiness = (Business)result.Value;
+        resultBusiness.Id.ShouldBe(id);
+        resultBusiness.Name.ShouldBe(name);
+
+        // Validate Calls
+        var savedBusiness = ApiDbContext.Businesses.Where(b =>
+            b.Id == id && b.Name == name)
+            .FirstOrDefault();
+        savedBusiness.ShouldBeNull();
+    }
 }
