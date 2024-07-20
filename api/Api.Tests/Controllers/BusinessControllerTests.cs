@@ -91,6 +91,16 @@ public class BusinessControllerTests
     }
 
     [Fact]
+    public void Put_Returns404_WhenNotFound()
+    {
+        var id = Guid.NewGuid();
+
+        var response = Subject.Put(id, new WriteBusinessRequest("truffonis"));
+
+        ActionResultAsserter.AssertIsNotFound(response);
+    }
+
+    [Fact]
     public void Delete_RemovesAndReturnsBusiness()
     {
         var id = Guid.NewGuid();
@@ -112,5 +122,15 @@ public class BusinessControllerTests
             b.Id == id && b.Name == name)
             .FirstOrDefault();
         savedBusiness.ShouldBeNull();
+    }
+
+    [Fact]
+    public void Delete_Returns404_WhenNotFound()
+    {
+        var id = Guid.NewGuid();
+
+        var response = Subject.Delete(id);
+
+        ActionResultAsserter.AssertIsNotFound(response);
     }
 }

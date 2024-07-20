@@ -37,12 +37,12 @@ public class BusinessController(ApiDbContext dbContext) : Controller
     [Route("business/{id}")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType<Business>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<Business> Put([FromRoute] Guid id, [FromBody] WriteBusinessRequest request)
     {
         var business = DbContext.Businesses.Where(b => b.Id == id).FirstOrDefault();
         if (business is null)
         {
-            // Do something about this
             return NotFound();
         }
         
@@ -55,12 +55,12 @@ public class BusinessController(ApiDbContext dbContext) : Controller
     [HttpDelete]
     [Route("business/{id}")]
     [ProducesResponseType<Business>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<Business> Delete([FromRoute] Guid id)
     {
         var business = DbContext.Businesses.Where(b => b.Id == id).FirstOrDefault();
         if (business is null)
         {
-            // Do something about this
             return NotFound();
         }
         
