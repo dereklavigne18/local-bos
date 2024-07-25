@@ -10,7 +10,7 @@ export class FetchBusinessesState {
     }
 }
 
-const useBusinesses = (): FetchBusinessesState => {
+export const useBusinesses = (): FetchBusinessesState => {
     const [status, setStatus] = useState('idle');
     const [businesses, setBusinesses] = useState<Business[]>([]);
 
@@ -29,5 +29,3 @@ const useBusinesses = (): FetchBusinessesState => {
 
     return { status, businesses };
 };
-
-export default { useBusinesses };

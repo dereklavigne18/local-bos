@@ -1,7 +1,7 @@
-import BusinessHooks from 'src/hooks/useBusinesses';
+import { useBusinesses } from 'src/hooks/BusinessHooks';
 
 export default function BusinessesSearch() {
-    const { businesses } = BusinessHooks.useBusinesses();
+    const { businesses } = useBusinesses();
     return (
         <>
             <b>Businesses</b>
