@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
+import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { Business } from 'src/api/BusinessClient';
 import BusinessSearch from 'src/components/BusinessesSearch';

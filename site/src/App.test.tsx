@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
+import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 import useBusinessesHooks, { FetchBusinessesState} from 'src/hooks/useBusinesses';
