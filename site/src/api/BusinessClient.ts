@@ -7,10 +7,8 @@ export class Business {
     }
 }
 
-async function fetchBusinesses(): Promise<Business[]> {
+export const fetchBusinesses = async (): Promise<Business[]> => {
     // TODO - Write tests for this
     return await fetch('http://localhost:5280/business')
         .then(r => r.json() as Promise<Business[]>);
-}
-
-export default { fetchBusinesses }; 
+} 

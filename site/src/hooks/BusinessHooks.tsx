@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import BusinessClient, { Business } from 'src/api/BusinessClient';
+import { Business, fetchBusinesses } from 'src/api/BusinessClient';
 
 export class FetchBusinessesState {
     status: string;
@@ -18,14 +18,14 @@ export const useBusinesses = (): FetchBusinessesState => {
         const doFetchBusinesses = async () => {
             setStatus('fetching');
 
-            const businesses = await BusinessClient.fetchBusinesses();
+            const businesses = await fetchBusinesses();
 
             setBusinesses(businesses);
             setStatus('fetched');
         };
 
         doFetchBusinesses();
-    });
+    }, []);
 
     return { status, businesses };
 };
