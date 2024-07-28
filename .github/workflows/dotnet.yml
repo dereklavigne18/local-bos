@@ -19,8 +19,10 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore API dependencies
-      run: (cd api/Api && dotnet restore)
+      run: (cd api && dotnet restore)
     - name: API Build
-      run: (cd api/Api && dotnet build --no-restore)
+      run: (cd api && dotnet build --no-restore)
+    - name: API Formatting Checks
+      run: (cd api && dotnet format --no-restore --verify-no-changes)
     - name: API Tests
-      run: (cd api/Api.Tests && dotnet test --verbosity normal)
+      run: (cd api/Api.Tests && dotnet test --no-build --verbosity normal)
