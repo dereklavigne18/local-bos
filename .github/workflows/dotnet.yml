@@ -23,4 +23,4 @@ jobs:
     - name: API Build
       run: (cd api/Api && dotnet build --no-restore)
     - name: API Tests
-      run: (cd api/Api.Tests && dotnet test --no-build --verbosity normal)
+      run: (cd api/Api.Tests && dotnet test --verbosity normal)
