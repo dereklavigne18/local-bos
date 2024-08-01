@@ -26,6 +26,6 @@ jobs:
         cache: 'npm'
         cache-dependency-path: site/package-lock.json
     - name: JS Lint
-      run: (cd site && npm lint)
+      run: (cd site && npm run lint)
     - name: JS Test
       run: (cd site && npm test run)
