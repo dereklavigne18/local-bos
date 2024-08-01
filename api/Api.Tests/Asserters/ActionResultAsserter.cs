@@ -10,7 +10,7 @@ class ActionResultAsserter
     {
         var (statusCode, data) = UnpackResponse(actionResult);
         statusCode.ShouldBe(StatusCodes.Status200OK);
-        
+
         if (validateT is not null)
         {
             data.ShouldNotBeNull();
@@ -23,7 +23,7 @@ class ActionResultAsserter
     {
         var statusCode = StatusCode(actionResult);
 
-        statusCode.ShouldBe(StatusCodes.Status404NotFound);  
+        statusCode.ShouldBe(StatusCodes.Status404NotFound);
     }
 
     private static int StatusCode<T>(ActionResult<T> actionResult)
@@ -37,17 +37,18 @@ class ActionResultAsserter
     {
         try
         {
-            var objResult = (ObjectResult?) actionResult.Result;
+            var objResult = (ObjectResult?)actionResult.Result;
             objResult.ShouldNotBeNull();
             objResult.StatusCode.ShouldNotBeNull();
             int statusCode = (int)objResult.StatusCode;
 
             return (statusCode, objResult.Value);
-        } catch (InvalidCastException)
+        }
+        catch (InvalidCastException)
         {
-            var statusResult = (StatusCodeResult?) actionResult.Result;
+            var statusResult = (StatusCodeResult?)actionResult.Result;
             statusResult.ShouldNotBeNull();
-            
+
             return (statusResult.StatusCode, null);
         }
     }

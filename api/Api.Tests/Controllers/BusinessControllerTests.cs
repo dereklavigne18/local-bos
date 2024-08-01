@@ -47,7 +47,7 @@ public class BusinessControllerTests
         ActionResultAsserter.AssertIsOk(response,
             (businesses) => businesses.ToList().ShouldBe(new List<Business> { danFlashs, truffonis }));
     }
-    
+
     [Fact]
     public void Post_CreatesAndReturnsNewBusiness()
     {
@@ -78,7 +78,8 @@ public class BusinessControllerTests
 
         // Validate Response
         ActionResultAsserter.AssertIsOk(response,
-            (b) => {
+            (b) =>
+            {
                 b.Id.ShouldBe(danFlashsId);
                 b.Name.ShouldBe(truffonisName);
             });
@@ -112,7 +113,8 @@ public class BusinessControllerTests
 
         // Validate Response
         ActionResultAsserter.AssertIsOk(response,
-            (b) => {
+            (b) =>
+            {
                 b.Id.ShouldBe(id);
                 b.Name.ShouldBe(name);
             });

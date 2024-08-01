@@ -45,7 +45,7 @@ public class BusinessController(ApiDbContext dbContext) : Controller
         {
             return NotFound();
         }
-        
+
         business.Name = request.Name;
         DbContext.SaveChanges();
 
@@ -63,7 +63,7 @@ public class BusinessController(ApiDbContext dbContext) : Controller
         {
             return NotFound();
         }
-        
+
         DbContext.Businesses.Remove(business);
         DbContext.SaveChanges();
 
