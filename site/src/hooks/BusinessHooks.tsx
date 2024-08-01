@@ -2,30 +2,30 @@ import { useEffect, useState } from 'react';
 import { Business, fetchBusinesses } from 'src/api/BusinessClient';
 
 export class FetchBusinessesState {
-    status: string;
-    businesses: Business[];
-    constructor(status: string, businesses: Business[]) {
-        this.status = status;
-        this.businesses = businesses;
-    }
+  status: string;
+  businesses: Business[];
+  constructor(status: string, businesses: Business[]) {
+    this.status = status;
+    this.businesses = businesses;
+  }
 }
 
 export const useBusinesses = (): FetchBusinessesState => {
-    const [status, setStatus] = useState('idle');
-    const [businesses, setBusinesses] = useState<Business[]>([]);
+  const [status, setStatus] = useState('idle');
+  const [businesses, setBusinesses] = useState<Business[]>([]);
 
-    useEffect(() => {
-        const doFetchBusinesses = async () => {
-            setStatus('fetching');
+  useEffect(() => {
+    const doFetchBusinesses = async () => {
+      setStatus('fetching');
 
-            const businesses = await fetchBusinesses();
+      const businesses = await fetchBusinesses();
 
-            setBusinesses(businesses);
-            setStatus('fetched');
-        };
+      setBusinesses(businesses);
+      setStatus('fetched');
+    };
 
-        doFetchBusinesses();
-    }, []);
+    doFetchBusinesses();
+  }, []);
 
-    return { status, businesses };
+  return { status, businesses };
 };
