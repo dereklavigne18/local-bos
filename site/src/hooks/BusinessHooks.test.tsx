@@ -13,8 +13,8 @@ describe('BusinessClient', () => {
     });
 
     it('should return fetched businesses', async () => {
-        var danFlashs = new BusinessClient.Business("123", "Dan Flash's");
-        var truffonis = new BusinessClient.Business("456", "Truffoni's");
+        const danFlashs = new BusinessClient.Business("123", "Dan Flash's");
+        const truffonis = new BusinessClient.Business("456", "Truffoni's");
         fetchBusinessesSpy.mockResolvedValue([danFlashs, truffonis]);
 
         const { result } = renderHook(() => useBusinesses());
