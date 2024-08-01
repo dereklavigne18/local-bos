@@ -25,6 +25,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: site/package-lock.json
+    - name: Install Dev Dependencies
+      run: (cd site && npm install --production=false)
     - name: JS Lint
       run: (cd site && npm run lint)
     - name: JS Test
