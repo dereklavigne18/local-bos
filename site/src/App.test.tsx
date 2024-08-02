@@ -8,9 +8,11 @@ describe('App', () => {
   const useBusinessesSpy = vi.spyOn(BusinessHooks, 'useBusinesses');
 
   it('should render the title', () => {
-    useBusinessesSpy.mockReturnValue(new BusinessHooks.FetchBusinessesState("fetched", []));
+    useBusinessesSpy.mockReturnValue(
+      new BusinessHooks.FetchBusinessesState('fetched', []),
+    );
     render(<App />);
     const linkElement = screen.getByText(/Local Bos/i);
     expect(linkElement).toBeInTheDocument();
-  })
+  });
 });

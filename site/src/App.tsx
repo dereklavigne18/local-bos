@@ -7,7 +7,7 @@ function App() {
       <h1>Local Bos</h1>
       <BusinessesSearch />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
